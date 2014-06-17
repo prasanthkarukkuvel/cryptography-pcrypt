@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
 namespace PermutationCryptoSystems
 {
     class PCrypt
@@ -117,10 +115,46 @@ namespace PermutationCryptoSystems
         {
             var a = value.Take((int)Math.Ceiling(value.Count() / 2d)).ToArray();
             var b = value.Skip(a.Count()).ToArray();
-
             var c = "";
+            var d = 0;
+            var e = 0;
+
+            for (int i = 0; i < value.Count(); i++)
+                c += (i % 2 == 0) ? a[d++] : b[e++];
 
             return c;
+        }
+
+        int _shift_left(int value, int count)
+        {
+            uint val = (uint)value;
+            return (int)((val << count) | (val >> (32 - count)));
+        }
+
+        int _shift_right(int value, int count)
+        {
+            uint val = (uint)value;
+            return (int)((value >> count) | (value << (32 - count)));
+        }
+
+        internal IEnumerable<char> BinaryLeftShift(IEnumerable<char> value, int count = 1)
+        {
+            return _int_to_char(_char_to_int(value).Select(x => _shift_left(x, count)));
+        }
+
+        internal IEnumerable<char> BinaryRightShift(IEnumerable<char> value, int count = 1)
+        {
+            return _int_to_char(_char_to_int(value).Select(x => _shift_right(x, count)));
+        }
+
+        internal IEnumerable<char> LeftShift(IEnumerable<char> value, int count = 1)
+        {
+            return value.Skip(count).Concat(value.Take(count));
+        }
+
+        internal IEnumerable<char> RightShift(IEnumerable<char> value, int count = 1)
+        {
+            return value.Skip(value.Count() - count).Concat(value.Take(value.Count() - count));
         }
     }
 
@@ -131,14 +165,8 @@ namespace PermutationCryptoSystems
         {
             string input = "find it posted below each video...while these are not necessarily a wordby-word transcript of what I say in the videos, they do cover the exact same material and provide the code that I type in so you can copy and paste it into your app. I'm providing this for those that have a hearing disability and for those who don't use English as their primary language. Also, it should be helpful for reference purposes so that you don't have to go back through";
 
-
-            var a = String.Join("", new PCrypt().ZigZag("12345"));
-
-
-
-            var b = String.Join("", new PCrypt().ZagZig(a));
-
-            Console.WriteLine(a + " -- " + b);
+            
+           
 
 
             Console.Read();
